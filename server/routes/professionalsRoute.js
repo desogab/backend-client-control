@@ -10,9 +10,11 @@ router.get('/api/professionals', async function (req, res) {
 // router.get('/api/professionals/:id', async function (req, res) {
 
 // });
-// router.post('/api/professionals', async function (req, res) {
-
-// });
+router.post('/api/professionals', async function (req, res) {
+  const professional = req.body;
+  const createNewProfessional = await professionalsService.saveProfessional(professional);
+  res.json(createNewProfessional);
+});
 // router.put('/api/professionals/:id', async function (req, res) {
 
 // });

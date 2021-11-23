@@ -1,4 +1,4 @@
-require('dotenv').config({ path: '../.env.test' })
+require('dotenv').config({ path: '../.env' })
 const pgp = require('pg-promise')();
 
 const db = pgp({
