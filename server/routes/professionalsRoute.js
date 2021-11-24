@@ -2,30 +2,51 @@ const express = require('express');
 const router = express.Router();
 const professionalsService = require('../services/professionalsService');
 
-router.get('/api/professionals', async function (req, res) {
-  const professionals = await professionalsService.getProfessionals();
-  res.json(professionals);
+router.get('/api/professionals', async function (req, res, next) {
+  try {
+    const professionals = await professionalsService.getProfessionals();
+    res.json(professionals);
+  } catch (error) {
+    next(error);
+  }
 });
 
-// router.get('/api/professionals/:id', async function (req, res) {
+router.get('/api/professional/:id', async function (req, res, next) {
+  try {
+    const professional = await professionalsService.getProfessional(req.params.id);
+    res.status(200).json(professional);
+  } catch (error) {
+    next(error);
+  };
+});
 
-// });
-
-router.post('/api/professionals', async function (req, res) {
+router.post('/api/professional', async function (req, res, next) {
   const professional = req.body;
-  const createNewProfessional = await professionalsService.saveProfessional(professional);
-  res.json(createNewProfessional);
+  try {
+    const createNewProfessional = await professionalsService.saveProfessional(professional);
+    res.status(201).json(createNewProfessional);
+  } catch (error) {
+    next(error);
+  }
 });
 
-router.put('/api/professional/:id', async function (req, res) {
+router.put('/api/professional/:id', async function (req, res, next) {
   const professional = req.body;
-  await professionalsService.updateProfessional(req.params.id, professional);
-  res.end();
+  try {
+    await professionalsService.updateProfessional(req.params.id, professional);
+    res.status(204).end();
+  } catch (error) {
+    next(error);
+  };
 });
 
-router.delete('/api/professional/:id', async function (req, res) {
-  await professionalsService.deleteProfessional(req.params.id);
-  res.end();
+router.delete('/api/professional/:id', async function (req, res, next) {
+  try {
+    await professionalsService.deleteProfessional(req.params.id);
+    res.status(204).end();
+  } catch (error) {
+    next(error);
+  }
 });
 
 module.exports = router;
