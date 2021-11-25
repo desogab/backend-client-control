@@ -1,28 +1,7 @@
--- CREATE OR REPLACE FUNCTION trigger_set_timestamp()
--- RETURNS TRIGGER AS $$
--- BEGIN
---   NEW.updated_at = NOW();
---   RETURN NEW;
--- END;
--- $$ LANGUAGE plpgsql;
-
--- CREATE TRIGGER set_timestamp
--- BEFORE UPDATE ON *
--- FOR EACH ROW
--- EXECUTE PROCEDURE trigger_set_timestamp();
--- CREATE EXTENSION pgcrypto;
--- function to encrypt password on database
--- INSERT INTO users (email, password) VALUES (
---   'johndoe@mail.com',
---   crypt('johnspassword', gen_salt('bf'))
--- );
-
 CREATE TABLE "professional_user" (
   id SERIAL PRIMARY KEY,
   username TEXT UNIQUE NOT NULL,
-  password TEXT NOT NULL,
-  info_id INTEGER UNIQUE,
-  FOREIGN KEY (info_id) REFERENCES "professional_info"(id)
+  password TEXT NOT NULL
 );
 
 CREATE TABLE "professional_info"(
@@ -37,8 +16,8 @@ CREATE TABLE "professional_info"(
   professional_document VARCHAR(50) UNIQUE NOT NULL,
   created_at TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP(3) NOT NULL,
-  professional_id INTEGER UNIQUE NOT NULL,
-  FOREIGN KEY (professional_id) REFERENCES "professional_user"(id)
+  user_id INTEGER UNIQUE NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES "professional_user"(id)
 );
 
 CREATE TABLE "client"(
@@ -104,16 +83,4 @@ CREATE TABLE "client_address"(
   updated_at TIMESTAMP(3) NOT NULL,
   client_id INTEGER NOT NULL,
   FOREIGN KEY (client_id) REFERENCES "client"(id)
-);
-
-CREATE TYPE PROFESSION AS ENUM(
-  'PSICOLOGO',
-  'PSICOLOGA',
-  'DENTISTA',
-  'NUTRICIONISTA'
-);
-
-CREATE TYPE CONSULTATION_MODEL AS ENUM (
-  'PRESENCIAL',
-  'ONLINE'
 );
