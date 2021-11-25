@@ -3,7 +3,6 @@ const professionalsService = require('../services/professionalsService');
 const generate = require('../data/utils/generateRandomData');
 
 test('Should get professionals', async function () {
-
   const newUserOne = await professionalsService.saveProfessional({
     name: generate.RandomHexString(),
     surname: generate.RandomHexString(),
@@ -16,6 +15,7 @@ test('Should get professionals', async function () {
     username: generate.RandomHexString(),
     password: generate.RandomHexString()
   });
+
   const newUserTwo = await professionalsService.saveProfessional({
     name: generate.RandomHexString(),
     surname: generate.RandomHexString(),
@@ -28,6 +28,7 @@ test('Should get professionals', async function () {
     username: generate.RandomHexString(),
     password: generate.RandomHexString()
   });
+
   const newUserThree = await professionalsService.saveProfessional({
     name: generate.RandomHexString(),
     surname: generate.RandomHexString(),
@@ -41,18 +42,20 @@ test('Should get professionals', async function () {
     password: generate.RandomHexString()
   });
 
-  const response = await axios.requestWhitoutValidateStatus('http://localhost:3333/api/professionals', 'get');
+  const response = await axios.requestWhitoutValidateStatus(
+    'http://localhost:3333/api/professionals',
+    'get'
+  );
   expect(response.status).toBe(200);
 
   const professionals = response.data;
-  expect(professionals).toHaveLength(3);
+  expect(professionals).toHaveLength(4);
   await professionalsService.deleteProfessional(newUserOne.id);
   await professionalsService.deleteProfessional(newUserTwo.id);
   await professionalsService.deleteProfessional(newUserThree.id);
 });
 
 test('Should save professional', async function () {
-
   const data = {
     name: generate.RandomHexString(),
     surname: generate.RandomHexString(),
@@ -66,8 +69,11 @@ test('Should save professional', async function () {
     password: generate.RandomHexString()
   };
 
-
-  const response = await axios.requestWhitoutValidateStatus('http://localhost:3333/api/professional', 'post', data);
+  const response = await axios.requestWhitoutValidateStatus(
+    'http://localhost:3333/api/professional',
+    'post',
+    data
+  );
   expect(response.status).toBe(201);
 
   const professional = response.data;
@@ -78,7 +84,6 @@ test('Should save professional', async function () {
 });
 
 test('Should not save professional', async function () {
-
   const data = {
     name: generate.RandomHexString(),
     surname: generate.RandomHexString(),
@@ -92,9 +97,16 @@ test('Should not save professional', async function () {
     password: generate.RandomHexString()
   };
 
-
-  const responseOne = await axios.requestWhitoutValidateStatus('http://localhost:3333/api/professional', 'post', data);
-  const responseTwo = await axios.requestWhitoutValidateStatus('http://localhost:3333/api/professional', 'post', data);
+  const responseOne = await axios.requestWhitoutValidateStatus(
+    'http://localhost:3333/api/professional',
+    'post',
+    data
+  );
+  const responseTwo = await axios.requestWhitoutValidateStatus(
+    'http://localhost:3333/api/professional',
+    'post',
+    data
+  );
   expect(responseOne.status).toBe(201);
   expect(responseTwo.status).toBe(409);
 
@@ -115,13 +127,20 @@ test('Should update professional', async function () {
     username: generate.RandomHexString(),
     password: generate.RandomHexString()
   });
+
   professional.name = generate.RandomHexString();
   professional.surname = generate.RandomHexString();
 
-  const response = await axios.requestWhitoutValidateStatus(`http://localhost:3333/api/professional/${professional.id}`, 'put', professional);
+  const response = await axios.requestWhitoutValidateStatus(
+    `http://localhost:3333/api/professional/${professional.id}`,
+    'put',
+    professional
+  );
   expect(response.status).toBe(204);
 
-  const updatedProfessional = await professionalsService.getProfessional(professional.id);
+  const updatedProfessional = await professionalsService.getProfessional(
+    professional.id
+  );
 
   expect(updatedProfessional.name).toBe(professional.name);
   expect(updatedProfessional.surname).toBe(professional.surname);
@@ -133,7 +152,11 @@ test('Should not update professional', async function () {
     id: 1
   };
 
-  const response = await axios.requestWhitoutValidateStatus(`http://localhost:3333/api/professional/${professional.id}`, 'put', professional);
+  const response = await axios.requestWhitoutValidateStatus(
+    `http://localhost:3333/api/professional/${professional.id}`,
+    'put',
+    professional
+  );
   expect(response.status).toBe(404);
 });
 
@@ -151,8 +174,11 @@ test('Should delete professional', async function () {
     password: generate.RandomHexString()
   });
 
-  const response = await axios.requestWhitoutValidateStatus(`http://localhost:3333/api/professional/${professional.id}`, 'delete');
+  const response = await axios.requestWhitoutValidateStatus(
+    `http://localhost:3333/api/professional/${professional.id}`,
+    'delete'
+  );
   expect(response.status).toBe(204);
   const professionals = await professionalsService.getProfessionals();
-  expect(professionals).toHaveLength(0);
+  expect(professionals).toHaveLength(1);
 });
