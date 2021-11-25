@@ -1,6 +1,5 @@
 const axios = require('axios');
 
-
 exports.request = function (url, method, data) {
   return axios({ url, method, data });
 };

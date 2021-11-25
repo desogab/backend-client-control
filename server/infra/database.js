@@ -1,6 +1,6 @@
 require('dotenv').config({ path: '../.env' });
 const pgp = require('pg-promise')({
-  capSQL: true,
+  capSQL: true
 });
 
 const db = pgp({

@@ -11,7 +11,13 @@ exports.RandomDateTime = function () {
 };
 
 exports.RandomProfession = function () {
-  const selectProfession = ['PSICOLOGO', 'PSICOLOGA', 'NUTRICIONISTA', 'DENTISTA'];
-  const getRandomProfession = selectProfession[Math.floor(Math.random() * selectProfession.length)];
+  const selectProfession = [
+    'PSICOLOGO',
+    'PSICOLOGA',
+    'NUTRICIONISTA',
+    'DENTISTA'
+  ];
+  const getRandomProfession =
+    selectProfession[Math.floor(Math.random() * selectProfession.length)];
   return getRandomProfession;
 };
