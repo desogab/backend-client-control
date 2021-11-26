@@ -49,7 +49,7 @@ test('Should get professionals', async function () {
   expect(response.status).toBe(200);
 
   const professionals = response.data;
-  expect(professionals).toHaveLength(4);
+  expect(professionals).toHaveLength(3);
   await professionalsService.deleteProfessional(newUserOne.id);
   await professionalsService.deleteProfessional(newUserTwo.id);
   await professionalsService.deleteProfessional(newUserThree.id);
@@ -107,6 +107,7 @@ test('Should not save professional', async function () {
     'post',
     data
   );
+
   expect(responseOne.status).toBe(201);
   expect(responseTwo.status).toBe(409);
 
@@ -180,5 +181,5 @@ test('Should delete professional', async function () {
   );
   expect(response.status).toBe(204);
   const professionals = await professionalsService.getProfessionals();
-  expect(professionals).toHaveLength(1);
+  expect(professionals).toHaveLength(0);
 });
