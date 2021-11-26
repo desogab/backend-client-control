@@ -1,7 +1,7 @@
 const db = require('../infra/database');
 
 exports.getProfessionals = function () {
-  return db.query('select * from professional_info');
+  return db.query('select * from professional_user');
 };
 
 exports.getProfessional = function (id) {
@@ -15,7 +15,7 @@ exports.getProfessionalByTitle = function (username) {
 
 exports.saveProfessional = function (professional) {
   return db.one(
-    'with new_professional_user as (insert into professional_user(username, password)values($1, $2)returning *) insert into professional_info(name, surname, birthdate, cpf, email, phone, profession, professional_document, user_id) values ($3, $4, $5, $6, $7, $8, $9, $10,(select id from professional_user)) returning *',
+    'with new_professional_user as (insert into professional_user(username, password)values($1, $2)returning *) insert into professional_info(name, surname, birthdate, cpf, email, phone, profession, professional_document, user_id) values ($3, $4, $5, $6, $7, $8, $9, $10,(select id from new_professional_user)) returning *',
     [
       professional.username,
       professional.password,
