@@ -55,8 +55,8 @@ CREATE TABLE "client_sponsor"(
   cpf VARCHAR(14) UNIQUE NOT NULL,
   created_at TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP(3),
-  sponsor_id INTEGER UNIQUE,
-  FOREIGN KEY (sponsor_id) REFERENCES "client"(id)
+  client_id INTEGER UNIQUE,
+  FOREIGN KEY (client_id) REFERENCES "client"(id)
 );
 
 CREATE TABLE "client_emergency"(
