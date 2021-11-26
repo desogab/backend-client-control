@@ -1,51 +1,139 @@
 const axios = require('../services/axios');
 const clientsService = require('../services/clientsService');
+const professionalsService = require('../services/professionalsService');
 const generate = require('../data/utils/generateRandomData');
-//professional_id = 26, para atrelar aos clientes durante
-// o teste;
-test.only('Should save client', async function () {
-  //TODO: criar uma variavel com os dados que quero salvar
+
+test.only('Should get client', async function () {});
+
+test('Should save client', async function () {
+  const relationshipProfessional = await professionalsService.saveProfessional({
+    name: generate.RandomHexString(),
+    surname: generate.RandomHexString(),
+    birthdate: generate.RandomDateTime(),
+    cpf: generate.RandomHexString(),
+    email: generate.RandomHexString(),
+    phone: generate.RandomHexString(),
+    profession: generate.RandomProfession(),
+    professional_document: generate.RandomHexString(),
+    username: generate.RandomHexString(),
+    password: generate.RandomHexString()
+  });
+
+  const responseProfessional = await axios.requestWhitoutValidateStatus(
+    `http://localhost:3333/api/professional/${relationshipProfessional.id}`,
+    'get'
+  );
+
+  expect(responseProfessional.status).toBe(200);
+
+  const professionalId = responseProfessional.data.id;
+
   const data = {
-    active: '',
-    sponsor: '',
-    name: '',
-    surname: '',
-    birthdate: '',
-    cpf: '',
-    email: '',
-    phone: '',
-    consultation_price: '',
-    professional_id: 26,
-    street: '',
-    district: '',
-    number: 01,
-    city: '',
-    complement: '',
-    state: '',
-    zipcode: '',
-    emergency_name: '',
-    emergency_surname: '',
-    emergency_phone: '',
-    sponsor_name: '',
-    sponsor_surname: '',
-    sponsor_cpf: ''
+    active: true,
+    sponsor: true,
+    name: generate.RandomHexString(),
+    surname: generate.RandomHexString(),
+    birthdate: generate.RandomDateTime(),
+    cpf: generate.RandomHexString(),
+    email: generate.RandomHexString(),
+    phone: generate.RandomHexString(),
+    consultation_price: 200,
+    professional_id: professionalId,
+    street: generate.RandomHexString(),
+    district: generate.RandomHexString(),
+    number: 12,
+    city: generate.RandomHexString(),
+    complement: generate.RandomHexString(),
+    state: 'RJ',
+    zipcode: generate.RandomHexString(),
+    emergency_name: generate.RandomHexString(),
+    emergency_surname: generate.RandomHexString(),
+    emergency_phone: generate.RandomHexString(),
+    sponsor_name: generate.RandomHexString(),
+    sponsor_surname: generate.RandomHexString(),
+    sponsor_cpf: generate.RandomHexString()
   };
-  //TODO: crio um POST request para enviar esses dados através
-  // das rotas http para o banco de dados.
+
   const response = await axios.requestWhitoutValidateStatus(
     'http://localhost:3333/api/client',
     'post',
     data
   );
-  //TODO: Devo esperar que o retorno seja 200. expect;
+
   expect(response.status).toBe(201);
-  //TODO: armazeno a response do POST e faço a extração
-  // de .data
+
   const client = response.data;
 
-  //TODO: verifico se a data inicial bate com a resposta
-  // da API através do expect/toBe
-  expect(...client).toBe(...data);
-  //TODO: deleto o post;
-  await clientsService.deleteClient(client.id);
+  await clientsService.deleteClient(client.client_id);
+  await professionalsService.deleteProfessional(professionalId);
+});
+
+test('Shoud not save', async function () {
+  const relationshipProfessional = await professionalsService.saveProfessional({
+    name: generate.RandomHexString(),
+    surname: generate.RandomHexString(),
+    birthdate: generate.RandomDateTime(),
+    cpf: generate.RandomHexString(),
+    email: generate.RandomHexString(),
+    phone: generate.RandomHexString(),
+    profession: generate.RandomProfession(),
+    professional_document: generate.RandomHexString(),
+    username: generate.RandomHexString(),
+    password: generate.RandomHexString()
+  });
+
+  const responseProfessional = await axios.requestWhitoutValidateStatus(
+    `http://localhost:3333/api/professional/${relationshipProfessional.id}`,
+    'get'
+  );
+
+  expect(responseProfessional.status).toBe(200);
+
+  const professionalId = responseProfessional.data.id;
+
+  const data = {
+    active: true,
+    sponsor: true,
+    name: generate.RandomHexString(),
+    surname: generate.RandomHexString(),
+    birthdate: generate.RandomDateTime(),
+    cpf: generate.RandomHexString(),
+    email: generate.RandomHexString(),
+    phone: generate.RandomHexString(),
+    consultation_price: 200,
+    professional_id: professionalId,
+    street: generate.RandomHexString(),
+    district: generate.RandomHexString(),
+    number: 12,
+    city: generate.RandomHexString(),
+    complement: generate.RandomHexString(),
+    state: 'RJ',
+    zipcode: generate.RandomHexString(),
+    emergency_name: generate.RandomHexString(),
+    emergency_surname: generate.RandomHexString(),
+    emergency_phone: generate.RandomHexString(),
+    sponsor_name: generate.RandomHexString(),
+    sponsor_surname: generate.RandomHexString(),
+    sponsor_cpf: generate.RandomHexString()
+  };
+
+  const responseClientOne = await axios.requestWhitoutValidateStatus(
+    'http://localhost:3333/api/client',
+    'post',
+    data
+  );
+
+  const responseClientTwo = await axios.requestWhitoutValidateStatus(
+    'http://localhost:3333/api/client',
+    'post',
+    data
+  );
+
+  expect(responseClientOne.status).toBe(201);
+  expect(responseClientTwo.status).toBe(500);
+
+  const client = responseClientOne.data;
+
+  await clientsService.deleteClient(client.client_id);
+  await professionalsService.deleteProfessional(professionalId);
 });
