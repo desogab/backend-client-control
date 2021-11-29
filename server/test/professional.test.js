@@ -1,6 +1,6 @@
 const axios = require('../services/axios');
 const professionalsService = require('../services/professionalsService');
-const generate = require('../data/utils/generateRandomData');
+const generate = require('../utils/generateRandomData');
 
 test('Should get professionals', async function () {
   const newUserOne = await professionalsService.saveProfessional({
@@ -107,7 +107,6 @@ test('Should not save professional', async function () {
     'post',
     data
   );
-
   expect(responseOne.status).toBe(201);
   expect(responseTwo.status).toBe(409);
 
