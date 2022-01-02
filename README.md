@@ -12,7 +12,7 @@ Este projeto tem como objetivo ajudar profissionais liberais como **psicólogos 
 
 ### 📃 Lista de Funcionalidades
 
-- Criação de profissionais liberais ✅
+- Criação de profissionais liberais ❌
 - Cadastrar informações dos clientes ❌
 
 ### 🎥 Demonstração
