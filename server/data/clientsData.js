@@ -27,11 +27,19 @@ exports.saveClient = async function (client) {
         client.emergency_phone,
         client.sponsor_name,
         client.sponsor_surname,
-        client.sponsor_cpf
+        client.sponsor_cpf,
       ]
     );
     return t.one('select * from client where id = $1', [newClient.client_id]);
   });
+};
+
+exports.getClients = function () {
+  return db.query('select * from client');
+};
+
+exports.getClient = function (id) {
+  return db.oneOrNone('select * from client where id = $1', [id]);
 };
 
 exports.deleteClient = function (id) {

@@ -12,9 +12,10 @@ router.get('/api/professionals', async function (req, res, next) {
 });
 
 router.get('/api/professional/:id', async function (req, res, next) {
+  const professionalId = req.params.id;
   try {
     const professional = await professionalsService.getProfessional(
-      req.params.id
+      professionalId
     );
     res.status(200).json(professional);
   } catch (error) {
@@ -35,9 +36,10 @@ router.post('/api/professional', async function (req, res, next) {
 });
 
 router.put('/api/professional/:id', async function (req, res, next) {
+  const professionalId = req.params.id;
   const professional = req.body;
   try {
-    await professionalsService.updateProfessional(req.params.id, professional);
+    await professionalsService.updateProfessional(professionalId, professional);
     res.status(204).end();
   } catch (error) {
     next(error);

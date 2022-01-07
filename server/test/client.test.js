@@ -1,11 +1,10 @@
 const axios = require('../services/axios');
 const clientsService = require('../services/clientsService');
 const professionalsService = require('../services/professionalsService');
-const generate = require('../utils/generateRandomData');
+const generate = require('./utils/generateRandomData');
 
-test.only('Should get client', async function () {
-  //criar um profissional
-  const professional = await professionalsService.saveProfessional({
+test('Shoud get clients', async function () {
+  const newProfessional = {
     name: generate.RandomHexString(),
     surname: generate.RandomHexString(),
     birthdate: generate.RandomDateTime(),
@@ -15,18 +14,113 @@ test.only('Should get client', async function () {
     profession: generate.RandomProfession(),
     professional_document: generate.RandomHexString(),
     username: generate.RandomHexString(),
-    password: generate.RandomHexString()
-  });
+    password: generate.RandomHexString(),
+  };
 
   const responseProfessional = await axios.requestWhitoutValidateStatus(
-    'http://localhost:3333/professional',
+    'http://localhost:3333/api/professional',
     'post',
-    professional
+    newProfessional
   );
 
-  expect(responseProfessional.status).toBe(200);
+  //verificar a criação do profissional 201
+  const professional = responseProfessional.data;
 
-  const professionalId = responseProfessional.data.id;
+  //criar um cliente atrelando o professional_id ao id do profissional
+  const professionalId = professional.id;
+
+  const clientOne = await clientsService.saveClient({
+    active: true,
+    sponsor: true,
+    name: generate.RandomHexString(),
+    surname: generate.RandomHexString(),
+    birthdate: generate.RandomDateTime(),
+    cpf: generate.RandomHexString(),
+    email: generate.RandomHexString(),
+    phone: generate.RandomHexString(),
+    consultation_price: 200,
+    professional_id: professionalId,
+    street: generate.RandomHexString(),
+    district: generate.RandomHexString(),
+    number: 12,
+    city: generate.RandomHexString(),
+    complement: generate.RandomHexString(),
+    state: 'RJ',
+    zipcode: generate.RandomHexString(),
+    emergency_name: generate.RandomHexString(),
+    emergency_surname: generate.RandomHexString(),
+    emergency_phone: generate.RandomHexString(),
+    sponsor_name: generate.RandomHexString(),
+    sponsor_surname: generate.RandomHexString(),
+    sponsor_cpf: generate.RandomHexString(),
+  });
+
+  const clientTwo = await clientsService.saveClient({
+    active: true,
+    sponsor: true,
+    name: generate.RandomHexString(),
+    surname: generate.RandomHexString(),
+    birthdate: generate.RandomDateTime(),
+    cpf: generate.RandomHexString(),
+    email: generate.RandomHexString(),
+    phone: generate.RandomHexString(),
+    consultation_price: 200,
+    professional_id: professionalId,
+    street: generate.RandomHexString(),
+    district: generate.RandomHexString(),
+    number: 12,
+    city: generate.RandomHexString(),
+    complement: generate.RandomHexString(),
+    state: 'RJ',
+    zipcode: generate.RandomHexString(),
+    emergency_name: generate.RandomHexString(),
+    emergency_surname: generate.RandomHexString(),
+    emergency_phone: generate.RandomHexString(),
+    sponsor_name: generate.RandomHexString(),
+    sponsor_surname: generate.RandomHexString(),
+    sponsor_cpf: generate.RandomHexString(),
+  });
+
+  const responseClient = await axios.requestWhitoutValidateStatus(
+    `http://localhost:3333/api/client`,
+    'get'
+  );
+  expect(responseClient.status).toBe(200);
+
+  const client = responseClient.data;
+
+  expect(client).toHaveLength(2);
+  await professionalsService.deleteProfessional(professionalId);
+  await clientsService.deleteClient(clientOne.id);
+  await clientsService.deleteClient(clientTwo.id);
+});
+
+test('Should get client', async function () {
+  //criar um client
+  const newProfessional = {
+    name: generate.RandomHexString(),
+    surname: generate.RandomHexString(),
+    birthdate: generate.RandomDateTime(),
+    cpf: generate.RandomHexString(),
+    email: generate.RandomHexString(),
+    phone: generate.RandomHexString(),
+    profession: generate.RandomProfession(),
+    professional_document: generate.RandomHexString(),
+    username: generate.RandomHexString(),
+    password: generate.RandomHexString(),
+  };
+
+  const responseProfessional = await axios.requestWhitoutValidateStatus(
+    'http://localhost:3333/api/professional',
+    'post',
+    newProfessional
+  );
+
+  //verificar a criação do profissional 201
+  const professional = responseProfessional.data;
+
+  //criar um cliente atrelando o professional_id ao id do profissional
+  const professionalId = professional.id;
 
   const data = {
     active: true,
@@ -51,14 +145,28 @@ test.only('Should get client', async function () {
     emergency_phone: generate.RandomHexString(),
     sponsor_name: generate.RandomHexString(),
     sponsor_surname: generate.RandomHexString(),
-    sponsor_cpf: generate.RandomHexString()
+    sponsor_cpf: generate.RandomHexString(),
   };
 
-  //verificar a criação do profissional 201
-  //criar um cliente atrelando o professional_id ao id do profissional
   //apos a criação o status deve ser  201
+  const client = await axios.requestWhitoutValidateStatus(
+    'http://localhost:3333/api/client',
+    'post',
+    data
+  );
+  expect(client.status).toBe(201);
+
+  const clientId = client.data.id;
+
   //chamo o novo cliente com a requisição GET, status 200
+  const responseClient = await axios.requestWhitoutValidateStatus(
+    `http://localhost:3333/api/client/${clientId}`,
+    'get'
+  );
+  expect(responseClient.status).toBe(200);
   //apago o profissional e o cliente, status 204
+  await clientsService.deleteClient(clientId);
+  await professionalsService.deleteProfessional(professionalId);
 });
 
 test('Should save client', async function () {
@@ -72,7 +180,7 @@ test('Should save client', async function () {
     profession: generate.RandomProfession(),
     professional_document: generate.RandomHexString(),
     username: generate.RandomHexString(),
-    password: generate.RandomHexString()
+    password: generate.RandomHexString(),
   });
 
   const responseProfessional = await axios.requestWhitoutValidateStatus(
@@ -107,7 +215,7 @@ test('Should save client', async function () {
     emergency_phone: generate.RandomHexString(),
     sponsor_name: generate.RandomHexString(),
     sponsor_surname: generate.RandomHexString(),
-    sponsor_cpf: generate.RandomHexString()
+    sponsor_cpf: generate.RandomHexString(),
   };
 
   const response = await axios.requestWhitoutValidateStatus(
@@ -124,6 +232,10 @@ test('Should save client', async function () {
   await professionalsService.deleteProfessional(professionalId);
 });
 
+// test('Shoud update client', function () {});
+
+// test('Shoud not update client', function () {});
+
 test('Should not save', async function () {
   const professional = await professionalsService.saveProfessional({
     name: generate.RandomHexString(),
@@ -135,7 +247,7 @@ test('Should not save', async function () {
     profession: generate.RandomProfession(),
     professional_document: generate.RandomHexString(),
     username: generate.RandomHexString(),
-    password: generate.RandomHexString()
+    password: generate.RandomHexString(),
   });
 
   const responseProfessional = await axios.requestWhitoutValidateStatus(
@@ -170,7 +282,7 @@ test('Should not save', async function () {
     emergency_phone: generate.RandomHexString(),
     sponsor_name: generate.RandomHexString(),
     sponsor_surname: generate.RandomHexString(),
-    sponsor_cpf: generate.RandomHexString()
+    sponsor_cpf: generate.RandomHexString(),
   };
 
   const responseClientOne = await axios.requestWhitoutValidateStatus(
