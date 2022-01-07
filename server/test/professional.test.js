@@ -1,6 +1,6 @@
 const axios = require('../services/axios');
 const professionalsService = require('../services/professionalsService');
-const generate = require('../utils/generateRandomData');
+const generate = require('../test/utils/generateRandomData');
 
 test('Should get professionals', async function () {
   const newUserOne = await professionalsService.saveProfessional({
@@ -13,7 +13,7 @@ test('Should get professionals', async function () {
     profession: generate.RandomProfession(),
     professional_document: generate.RandomHexString(),
     username: generate.RandomHexString(),
-    password: generate.RandomHexString()
+    password: generate.RandomHexString(),
   });
 
   const newUserTwo = await professionalsService.saveProfessional({
@@ -26,7 +26,7 @@ test('Should get professionals', async function () {
     profession: generate.RandomProfession(),
     professional_document: generate.RandomHexString(),
     username: generate.RandomHexString(),
-    password: generate.RandomHexString()
+    password: generate.RandomHexString(),
   });
 
   const newUserThree = await professionalsService.saveProfessional({
@@ -39,7 +39,7 @@ test('Should get professionals', async function () {
     profession: generate.RandomProfession(),
     professional_document: generate.RandomHexString(),
     username: generate.RandomHexString(),
-    password: generate.RandomHexString()
+    password: generate.RandomHexString(),
   });
 
   const response = await axios.requestWhitoutValidateStatus(
@@ -66,7 +66,7 @@ test('Should save professional', async function () {
     profession: generate.RandomProfession(),
     professional_document: generate.RandomHexString(),
     username: generate.RandomHexString(),
-    password: generate.RandomHexString()
+    password: generate.RandomHexString(),
   };
 
   const response = await axios.requestWhitoutValidateStatus(
@@ -94,7 +94,7 @@ test('Should not save professional', async function () {
     profession: generate.RandomProfession(),
     professional_document: generate.RandomHexString(),
     username: generate.RandomHexString(),
-    password: generate.RandomHexString()
+    password: generate.RandomHexString(),
   };
 
   const responseOne = await axios.requestWhitoutValidateStatus(
@@ -125,7 +125,7 @@ test('Should update professional', async function () {
     profession: generate.RandomProfession(),
     professional_document: generate.RandomHexString(),
     username: generate.RandomHexString(),
-    password: generate.RandomHexString()
+    password: generate.RandomHexString(),
   });
 
   professional.name = generate.RandomHexString();
@@ -149,7 +149,7 @@ test('Should update professional', async function () {
 
 test('Should not update professional', async function () {
   const professional = {
-    id: 1
+    id: 1,
   };
 
   const response = await axios.requestWhitoutValidateStatus(
@@ -171,7 +171,7 @@ test('Should delete professional', async function () {
     profession: generate.RandomProfession(),
     professional_document: generate.RandomHexString(),
     username: generate.RandomHexString(),
-    password: generate.RandomHexString()
+    password: generate.RandomHexString(),
   });
 
   const response = await axios.requestWhitoutValidateStatus(

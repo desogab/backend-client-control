@@ -11,7 +11,7 @@ const pgp = require('pg-promise')({
     if (e.ctx) {
       // console.log('params', err.detail);
     }
-  }
+  },
 });
 
 const db = pgp({
@@ -19,7 +19,7 @@ const db = pgp({
   password: process.env.PASSWORD,
   host: process.env.HOST,
   port: process.env.PORT,
-  database: process.env.DATABASE
+  database: process.env.DATABASE,
 });
 
 module.exports = db;

@@ -9,7 +9,7 @@ exports.getProfessional = function (id) {
 };
 exports.getProfessionalByTitle = function (username) {
   return db.oneOrNone('select * from professional_user where username = $1', [
-    username
+    username,
   ]);
 };
 
@@ -26,7 +26,7 @@ exports.saveProfessional = function (professional) {
       professional.email,
       professional.phone,
       professional.profession,
-      professional.professional_document
+      professional.professional_document,
     ]
   );
 };
@@ -47,7 +47,7 @@ exports.updateProfessional = function (id, professional) {
       professional.phone,
       professional.profession,
       professional.professional_document,
-      id
+      id,
     ]
   );
 };

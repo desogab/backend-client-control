@@ -16,4 +16,8 @@ app.use(function (error, req, res, next) {
   res.status(500).send(error.message);
 });
 
-app.listen(3333);
+const PORT = 3333;
+
+app.listen(PORT, () => {
+  console.log(`listen on port ${PORT}`);
+});
