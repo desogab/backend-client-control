@@ -1,46 +1,14 @@
 const axios = require('../services/axios');
 const professionalsService = require('../services/professionalsService');
 const generate = require('../test/utils/generateRandomData');
+const createProfessionalAndClient = require('./utils/generateProfessionalAndClient');
 
 test('Should get professionals', async function () {
-  const newUserOne = await professionalsService.saveProfessional({
-    name: generate.RandomHexString(),
-    surname: generate.RandomHexString(),
-    birthdate: generate.RandomDateTime(),
-    cpf: generate.RandomHexString(),
-    email: generate.RandomHexString(),
-    phone: generate.RandomHexString(),
-    profession: generate.RandomProfession(),
-    professional_document: generate.RandomHexString(),
-    username: generate.RandomHexString(),
-    password: generate.RandomHexString(),
-  });
+  const newUserOne = await createProfessionalAndClient.saveProfessionalOnDB();
 
-  const newUserTwo = await professionalsService.saveProfessional({
-    name: generate.RandomHexString(),
-    surname: generate.RandomHexString(),
-    birthdate: generate.RandomDateTime(),
-    cpf: generate.RandomHexString(),
-    email: generate.RandomHexString(),
-    phone: generate.RandomHexString(),
-    profession: generate.RandomProfession(),
-    professional_document: generate.RandomHexString(),
-    username: generate.RandomHexString(),
-    password: generate.RandomHexString(),
-  });
+  const newUserTwo = await createProfessionalAndClient.saveProfessionalOnDB();
 
-  const newUserThree = await professionalsService.saveProfessional({
-    name: generate.RandomHexString(),
-    surname: generate.RandomHexString(),
-    birthdate: generate.RandomDateTime(),
-    cpf: generate.RandomHexString(),
-    email: generate.RandomHexString(),
-    phone: generate.RandomHexString(),
-    profession: generate.RandomProfession(),
-    professional_document: generate.RandomHexString(),
-    username: generate.RandomHexString(),
-    password: generate.RandomHexString(),
-  });
+  const newUserThree = await createProfessionalAndClient.saveProfessionalOnDB();
 
   const response = await axios.requestWhitoutValidateStatus(
     'http://localhost:3333/api/professionals',
@@ -56,18 +24,7 @@ test('Should get professionals', async function () {
 });
 
 test('Should save professional', async function () {
-  const data = {
-    name: generate.RandomHexString(),
-    surname: generate.RandomHexString(),
-    birthdate: generate.RandomDateTime(),
-    cpf: generate.RandomHexString(),
-    email: generate.RandomHexString(),
-    phone: generate.RandomHexString(),
-    profession: generate.RandomProfession(),
-    professional_document: generate.RandomHexString(),
-    username: generate.RandomHexString(),
-    password: generate.RandomHexString(),
-  };
+  const data = createProfessionalAndClient.saveProfessionalData();
 
   const response = await axios.requestWhitoutValidateStatus(
     'http://localhost:3333/api/professional',
@@ -84,18 +41,7 @@ test('Should save professional', async function () {
 });
 
 test('Should not save professional', async function () {
-  const data = {
-    name: generate.RandomHexString(),
-    surname: generate.RandomHexString(),
-    birthdate: generate.RandomDateTime(),
-    cpf: generate.RandomHexString(),
-    email: generate.RandomHexString(),
-    phone: generate.RandomHexString(),
-    profession: generate.RandomProfession(),
-    professional_document: generate.RandomHexString(),
-    username: generate.RandomHexString(),
-    password: generate.RandomHexString(),
-  };
+  const data = createProfessionalAndClient.saveProfessionalData();
 
   const responseOne = await axios.requestWhitoutValidateStatus(
     'http://localhost:3333/api/professional',
@@ -115,18 +61,7 @@ test('Should not save professional', async function () {
 });
 
 test('Should update professional', async function () {
-  const professional = await professionalsService.saveProfessional({
-    name: generate.RandomHexString(),
-    surname: generate.RandomHexString(),
-    birthdate: generate.RandomDateTime(),
-    cpf: generate.RandomHexString(),
-    email: generate.RandomHexString(),
-    phone: generate.RandomHexString(),
-    profession: generate.RandomProfession(),
-    professional_document: generate.RandomHexString(),
-    username: generate.RandomHexString(),
-    password: generate.RandomHexString(),
-  });
+  const professional = await createProfessionalAndClient.saveProfessionalOnDB();
 
   professional.name = generate.RandomHexString();
   professional.surname = generate.RandomHexString();
@@ -161,18 +96,7 @@ test('Should not update professional', async function () {
 });
 
 test('Should delete professional', async function () {
-  const professional = await professionalsService.saveProfessional({
-    name: generate.RandomHexString(),
-    surname: generate.RandomHexString(),
-    birthdate: generate.RandomDateTime(),
-    cpf: generate.RandomHexString(),
-    email: generate.RandomHexString(),
-    phone: generate.RandomHexString(),
-    profession: generate.RandomProfession(),
-    professional_document: generate.RandomHexString(),
-    username: generate.RandomHexString(),
-    password: generate.RandomHexString(),
-  });
+  const professional = await createProfessionalAndClient.saveProfessionalOnDB();
 
   const response = await axios.requestWhitoutValidateStatus(
     `http://localhost:3333/api/professional/${professional.id}`,
