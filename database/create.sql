@@ -33,7 +33,7 @@ CREATE TABLE "client"(
   consultation_price MONEY NOT NULL,
   created_at TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP(3),
-  professional_id INTEGER NOT NULL UNIQUE,
+  professional_id INTEGER NOT NULL,
   FOREIGN KEY (professional_id) REFERENCES "professional_info"(id)
 );
 
