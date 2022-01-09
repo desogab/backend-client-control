@@ -15,9 +15,8 @@ exports.RandomProfession = function () {
     'PSICOLOGO',
     'PSICOLOGA',
     'NUTRICIONISTA',
-    'DENTISTA'
+    'DENTISTA',
   ];
-  const getRandomProfession =
-    selectProfession[Math.floor(Math.random() * selectProfession.length)];
+  const getRandomProfession = selectProfession[Math.floor(Math.random() * selectProfession.length)];
   return getRandomProfession;
 };

@@ -1,35 +1,35 @@
-const axios = require('../services/axios');
+import { requestWhitoutValidateStatus } from '../services/axios';
+
 const clientsService = require('../services/clientsService');
 const professionalsService = require('../services/professionalsService');
 const generate = require('./utils/generateRandomData');
 const createProfessionalAndClient = require('./utils/generateProfessionalAndClient');
 
-test('Shoud get clients', async function () {
+test('Shoud get clients', async () => {
   const newProfessional = createProfessionalAndClient.saveProfessionalData();
 
-  const responseProfessional = await axios.requestWhitoutValidateStatus(
+  const responseProfessional = await requestWhitoutValidateStatus(
     'http://localhost:3333/api/professional',
     'post',
-    newProfessional
+    newProfessional,
   );
-
-  //verificar a criação do profissional 201
+  // verificar a criação do profissional 201
   const professional = responseProfessional.data;
 
-  //criar um cliente atrelando o professional_id ao id do profissional
+  // criar um cliente atrelando o professional_id ao id do profissional
   const professionalId = professional.id;
 
   const clientOne = await createProfessionalAndClient.saveClientOnDB(
-    professionalId
+    professionalId,
   );
 
   const clientTwo = await createProfessionalAndClient.saveClientOnDB(
-    professionalId
+    professionalId,
   );
 
-  const responseClient = await axios.requestWhitoutValidateStatus(
-    `http://localhost:3333/api/client`,
-    'get'
+  const responseClient = await requestWhitoutValidateStatus(
+    'http://localhost:3333/api/client',
+    'get',
   );
   expect(responseClient.status).toBe(200);
 
@@ -41,51 +41,46 @@ test('Shoud get clients', async function () {
   await clientsService.deleteClient(clientTwo.id);
 });
 
-test('Should get client', async function () {
-  //criar um client
+test('Should get client', async () => {
+  // criar um client
   const newProfessional = createProfessionalAndClient.saveProfessionalData();
 
-  const responseProfessional = await axios.requestWhitoutValidateStatus(
+  const responseProfessional = await requestWhitoutValidateStatus(
     'http://localhost:3333/api/professional',
     'post',
-    newProfessional
+    newProfessional,
   );
 
-  //verificar a criação do profissional 201
   const professional = responseProfessional.data;
 
-  //criar um cliente atrelando o professional_id ao id do profissional
   const professionalId = professional.id;
 
   const data = createProfessionalAndClient.saveClientData(professionalId);
 
-  //apos a criação o status deve ser  201
-  const client = await axios.requestWhitoutValidateStatus(
+  const client = await requestWhitoutValidateStatus(
     'http://localhost:3333/api/client',
     'post',
-    data
+    data,
   );
   expect(client.status).toBe(201);
 
   const clientId = client.data.id;
 
-  //chamo o novo cliente com a requisição GET, status 200
-  const responseClient = await axios.requestWhitoutValidateStatus(
+  const responseClient = await requestWhitoutValidateStatus(
     `http://localhost:3333/api/client/${clientId}`,
-    'get'
+    'get',
   );
   expect(responseClient.status).toBe(200);
-  //apago o profissional e o cliente, status 204
   await clientsService.deleteClient(clientId);
   await professionalsService.deleteProfessional(professionalId);
 });
 
-test('Should save client', async function () {
+test('Should save client', async () => {
   const professional = await createProfessionalAndClient.saveProfessionalOnDB();
 
-  const responseProfessional = await axios.requestWhitoutValidateStatus(
+  const responseProfessional = await requestWhitoutValidateStatus(
     `http://localhost:3333/api/professional/${professional.id}`,
-    'get'
+    'get',
   );
 
   expect(responseProfessional.status).toBe(200);
@@ -94,10 +89,10 @@ test('Should save client', async function () {
 
   const data = createProfessionalAndClient.saveClientData(professionalId);
 
-  const response = await axios.requestWhitoutValidateStatus(
+  const response = await requestWhitoutValidateStatus(
     'http://localhost:3333/api/client',
     'post',
-    data
+    data,
   );
 
   expect(response.status).toBe(201);
@@ -108,16 +103,48 @@ test('Should save client', async function () {
   await professionalsService.deleteProfessional(professionalId);
 });
 
-// test('Shoud update client', function () {});
+test('Shoud update client', async () => {
+  const professional = createProfessionalAndClient.saveProfessionalData();
+  const createProfessional = await requestWhitoutValidateStatus(
+    'http://localhost:3333/api/professional',
+    'post',
+    professional,
+  );
 
-// test('Shoud not update client', function () {});
+  const responseProfessional = createProfessional.data;
+  const professionalId = responseProfessional.id;
 
-test('Should not save', async function () {
+  const client = await createProfessionalAndClient.saveClientOnDB(
+    professionalId,
+  );
+
+  client.name = generate.RandomHexString();
+  client.surname = generate.RandomHexString();
+
+  const response = await requestWhitoutValidateStatus(
+    `http://localhost:3333/api/client/${client.id}`,
+    'put',
+    client,
+    { 'X-Professional-ID': professionalId },
+  );
+
+  expect(response.status).toBe(204);
+
+  const updateClient = await clientsService.getClient(client.id);
+  expect(updateClient.name).toBe(client.name);
+  expect(updateClient.surname).toBe(client.surname);
+  await professionalsService.deleteProfessional(responseProfessional.id);
+  await clientsService.deleteClient(client.id);
+});
+
+// test('Shoud not update client', async function () {});
+
+test('Should not save', async () => {
   const professional = await createProfessionalAndClient.saveProfessionalOnDB();
 
-  const responseProfessional = await axios.requestWhitoutValidateStatus(
+  const responseProfessional = await requestWhitoutValidateStatus(
     `http://localhost:3333/api/professional/${professional.id}`,
-    'get'
+    'get',
   );
 
   expect(responseProfessional.status).toBe(200);
@@ -126,16 +153,16 @@ test('Should not save', async function () {
 
   const data = createProfessionalAndClient.saveClientData(professionalId);
 
-  const responseClientOne = await axios.requestWhitoutValidateStatus(
+  const responseClientOne = await requestWhitoutValidateStatus(
     'http://localhost:3333/api/client',
     'post',
-    data
+    data,
   );
 
-  const responseClientTwo = await axios.requestWhitoutValidateStatus(
+  const responseClientTwo = await requestWhitoutValidateStatus(
     'http://localhost:3333/api/client',
     'post',
-    data
+    data,
   );
 
   expect(responseClientOne.status).toBe(201);

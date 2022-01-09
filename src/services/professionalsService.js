@@ -12,7 +12,7 @@ exports.getProfessional = async function (id) {
 
 exports.saveProfessional = async function (professional) {
   const existingProfessional = await professionalsData.getProfessionalByTitle(
-    professional.username
+    professional.username,
   );
   if (existingProfessional) throw new Error('Professional already exists');
   return professionalsData.saveProfessional(professional);

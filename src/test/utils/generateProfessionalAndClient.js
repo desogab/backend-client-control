@@ -1,6 +1,6 @@
 const professionalsService = require('../../services/professionalsService');
 const clientsService = require('../../services/clientsService');
-const generate = require('../utils/generateRandomData');
+const generate = require('./generateRandomData');
 
 exports.saveProfessionalOnDB = () => {
   const professional = professionalsService.saveProfessional({
