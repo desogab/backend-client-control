@@ -3,7 +3,8 @@ import db from '../infra/database'
 
 export const getDataProfessionals = () => db.query('select * from professional_user')
 
-export const getDataProfessional = (id:IProfessionalInfo['professionalId']) => db.oneOrNone('select * from professional_info where id = $1', [id])
+export const getDataProfessional = (id:IProfessionalUser['id']) => db.oneOrNone('select * from professional_user where id = $1', [id])
+
 export const getDataProfessionalByTitle = (username:IProfessionalUser['username']) => db.oneOrNone('select * from professional_user where username = $1', [
   username
 ])

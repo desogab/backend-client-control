@@ -34,7 +34,7 @@ CREATE TABLE "client"(
   created_at TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP(3),
   professional_id INTEGER NOT NULL,
-  FOREIGN KEY (professional_id) REFERENCES "professional_info"(id)
+  FOREIGN KEY (professional_id) REFERENCES "professional_user"(id)
 );
 
 CREATE TABLE "consultation_info" (
@@ -44,7 +44,7 @@ CREATE TABLE "consultation_info" (
   model VARCHAR(15),
   professional_id INTEGER UNIQUE NOT NULL,
   client_id INTEGER UNIQUE NOT NULL,
-  FOREIGN KEY (professional_id) REFERENCES "professional_info"(id),
+  FOREIGN KEY (professional_id) REFERENCES "professional_user"(id),
   FOREIGN KEY (client_id) REFERENCES "client"(id)
 );
 
