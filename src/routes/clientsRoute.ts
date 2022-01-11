@@ -1,75 +1,73 @@
 import {
-  Router, Request, Response, NextFunction,
-} from 'express';
+  Router, Request, Response, NextFunction
+} from 'express'
+import { getClient, getClients, saveClient, deleteClient, updateClient } from '../services/clientsService'
 
-const clientsService = require('../services/clientsService');
-
-const router = Router();
+const router = Router()
 
 router.get(
   '/api/client',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const clients = await clientsService.getClients();
-      res.status(200).json(clients);
+      const clients = await getClients()
+      res.status(200).json(clients)
     } catch (error) {
-      next(error);
+      next(error)
     }
-  },
-);
+  }
+)
 
 router.get(
   '/api/client/:id',
   async (req: Request, res: Response, next: NextFunction) => {
-    const clientId = req.params.id;
+    const clientId = req.params.id
     try {
-      const client = await clientsService.getClient(clientId);
-      res.status(200).json(client);
+      const client = await getClient(clientId)
+      res.status(200).json(client)
     } catch (error) {
-      next(error);
+      next(error)
     }
-  },
-);
+  }
+)
 
 router.post(
   '/api/client',
   async (req: Request, res: Response, next: NextFunction) => {
-    const client = req.body;
+    const client = req.body
     try {
-      const createNewClient = await clientsService.saveClient(client);
-      res.status(201).json(createNewClient);
+      const createNewClient = await saveClient(client)
+      res.status(201).json(createNewClient)
     } catch (error) {
-      next(error);
+      next(error)
     }
-  },
-);
+  }
+)
 
 router.put(
   '/api/client/:id',
   async (req: Request, res: Response, next: NextFunction) => {
-    const clientId = req.params.id;
-    const client = req.body;
-    const professionalId = req.headers['x-professional-id'];
+    const clientId = req.params.id
+    const client = req.body
     try {
-      await clientsService.updateClient(professionalId, clientId, client);
-      res.status(204).end();
+      await updateClient(professionalId, clientId, client)
+      res.status(204).end()
     } catch (error) {
-      next(error);
+      next(error)
     }
-  },
-);
+  }
+)
 
 router.delete(
   '/api/client/:id',
   async (req: Request, res: Response, next: NextFunction) => {
-    const clientId = req.params.id;
+    const clientId = req.params.id
     try {
-      await clientsService.deleteClient(clientId);
-      res.status(204).end();
+      await deleteClient(clientId)
+      res.status(204).end()
     } catch (error) {
-      next(error);
+      next(error)
     }
-  },
-);
+  }
+)
 
-module.exports = router;
+export default router

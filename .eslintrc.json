@@ -5,15 +5,28 @@
         "jest": true
     },
     "extends": [
-        "airbnb-base"
+        "standard",
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaVersion": 13,
-        "sourceType": "module"
+        "sourceType": "module",
+        "project": [
+            "./tsconfig.json"
+        ]
     },
     "plugins": [
         "@typescript-eslint"
     ],
-    "rules": {}
+    "rules": {
+        "@typescript-eslint/strict-boolean-expressions": [
+            2,
+            {
+                "allowString": false,
+                "allowNumber": false
+            }
+        ]
+    }
 }
