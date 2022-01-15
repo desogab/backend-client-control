@@ -7,15 +7,15 @@ import {
 export const getClients = () => getDataClients()
 
 export const getClient = async (id:IClient['id']) => {
-  const client: IClient = await getClient(id)
-  if (client.id === '') throw new Error('Client not found')
+  const client: IClient = await getDataClient(id)
+  if (client.id === null) throw new Error('Client not found')
   return client
 }
 
 export const saveClient = async (client: IClient) => {
   const existingClient: string = await getDataClientByCPF(client.cpf)
-  if (existingClient !== '') throw new Error('Client already exists')
-  return saveDataClient(client)
+  if (existingClient !== null) throw new Error('Client already exists')
+  return await saveDataClient(client)
 }
 
 export const updateClient = async (professionalId: IProfessionalInfo['professionalId'], id: IClient['id'], client: IClient) => {

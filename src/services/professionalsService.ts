@@ -3,17 +3,18 @@ import { deleteDataProfessional, getDataProfessional, getDataProfessionalByTitle
 
 export const getProfessionals = () => getDataProfessionals()
 
-export const getProfessional = async (id: string) => {
+export const getProfessional = async (id: IProfessionalUser['id']) => {
   const professional = await getDataProfessional(id)
   if (professional === '') throw new Error('Professional not found')
   return professional
 }
 
 export const saveProfessional = async (professional: IProfessionalUser) => {
-  const existingProfessional = await getDataProfessionalByTitle(
-    professional.username
+  const existingProfessional: IProfessionalUser['cpf'] = await getDataProfessionalByTitle(
+    professional.cpf
   )
-  if (existingProfessional !== '') throw new Error('Professional already exists')
+  if (existingProfessional !== null) throw new Error('Professional already exists')
+
   return saveDataProfessional(professional)
 }
 
@@ -21,5 +22,5 @@ export const deleteProfessional = (id:string) => deleteDataProfessional(id)
 
 export const updateProfessional = async (id:IProfessionalInfo['professionalId'], professional:IProfessionalInfo) => {
   await getProfessional(id)
-  return updateDataProfessional(id, professional)
+  return await updateDataProfessional(id, professional)
 }

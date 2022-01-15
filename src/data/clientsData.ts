@@ -2,38 +2,53 @@ import { IClient } from 'src/@types/client'
 import { IProfessionalInfo } from 'src/@types/professional'
 import db from '../infra/database'
 
-export const saveDataClient = async (client: IClient) => await db.txIf(async (t) => {
-  const newClient = await t.one(
-    'WITH new_client AS (INSERT INTO client(active, sponsor, name, surname, birthdate, cpf, email, phone, consultation_price, professional_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id), new_address AS (INSERT INTO client_address(street, district, number, city, complement, state, zipcode, client_id) VALUES ($11,$12,$13,$14,$15,$16,$17,(SELECT id FROM new_client)) RETURNING client_id), new_emergency AS (INSERT INTO client_emergency (name, surname, phone, client_id) VALUES ($18, $19, $20, (SELECT client_id FROM new_address))RETURNING client_id) INSERT INTO client_sponsor (name, surname, cpf, client_id) VALUES ($21, $22, $23, (SELECT client_id FROM new_emergency)) RETURNING client_id',
-    [
-      client.active,
-      client.sponsor,
-      client.name,
-      client.surname,
-      client.birthdate,
-      client.cpf,
-      client.email,
-      client.phone,
-      client.consultationPrice,
-      client.professionalId,
-      client.street,
-      client.district,
-      client.number,
-      client.city,
-      client.complement,
-      client.state,
-      client.zipcode,
-      client.emergencyName,
-      client.emergencySurname,
-      client.emergencyPhone,
-      client.sponsorName,
-      client.sponsorSurname,
-      client.sponsorCpf
-    ]
-  )
-  client.id = newClient.client_id
-  return client
-})
+export const saveDataClient = async (client: IClient) => {
+  return await db.tx(async t => {
+    return await t.one(
+      'insert into client(active, sponsor, name, surname, birthdate, cpf, email, phone, consultation_price, professional_id) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) returning *', [
+        client.active,
+        client.sponsor,
+        client.name,
+        client.surname,
+        client.birthdate,
+        client.cpf,
+        client.email,
+        client.phone,
+        client.consultationPrice,
+        client.professionalId
+      ]).then(response => {
+      return t.batch([
+        t.one('insert into client_address(street, district, number, city, complement, state,      zipcode, client_id) values ($1, $2, $3, $4, $5, $6, $7, $8) returning id', [
+          client.street,
+          client.district,
+          client.number,
+          client.city,
+          client.complement,
+          client.state,
+          client.zipcode,
+          response.id
+        ]),
+        t.none('insert into client_emergency (name, surname, phone, client_id) values ($1, $2, $3, $4)',
+          [
+            client.emergencyName,
+            client.emergencySurname,
+            client.emergencyPhone,
+            response.id
+          ]
+        ),
+        t.none('insert into client_sponsor (name, surname, cpf, client_id) values ($1, $2, $3, $4)', [
+          client.sponsorName,
+          client.sponsorSurname,
+          client.sponsorCpf,
+          response.id
+        ]),
+        t.one('select c.*, ca.*, ce."name" as emergencyName, ce.surname as emergencySurname, ce.phone as emergencyPhone, cs."name" as sponsorName, cs.surname as sponsorSurname, cs.cpf as sponsorCpf from client c inner join client_address ca on c.id = ca.client_id inner join client_emergency ce on ca.client_id = ce.client_id inner join client_sponsor cs on ca.client_id = cs.client_id where c.id = $1;', [response.id])
+      ])
+    })
+  }).then(data => {
+    return data.at(-1)
+  })
+}
 
 export const getDataClients = () => db.query('select * from client')
 

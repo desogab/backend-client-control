@@ -1,16 +1,16 @@
 import { IProfessionalInfo, IProfessionalUser } from 'src/@types/professional'
 import db from '../infra/database'
 
-export const getDataProfessionals = () => db.query('select * from professional_user')
+export const getDataProfessionals = () => db.many('select * from professional_user pu inner join professional_info pinfo on pu.id = pinfo.user_id')
 
-export const getDataProfessional = (id:IProfessionalUser['id']) => db.oneOrNone('select * from professional_user where id = $1', [id])
+export const getDataProfessional = (id:IProfessionalUser['id']) => db.oneOrNone('select * from professional_info where user_id = $1', [id])
 
-export const getDataProfessionalByTitle = (username:IProfessionalUser['username']) => db.oneOrNone('select * from professional_user where username = $1', [
+export const getDataProfessionalByTitle = (username:IProfessionalUser['username']) => db.oneOrNone('select username from professional_user where username = $1', [
   username
 ])
 
 export const saveDataProfessional = (professional:IProfessionalUser) => db.one(
-  'with new_professional_user as (insert into professional_user(username, password)values($1, $2)returning *) insert into professional_info(name, surname, birthdate, cpf, email, phone, profession, professional_document, user_id) values ($3, $4, $5, $6, $7, $8, $9, $10,(select id from new_professional_user)) returning *',
+  'with new_professional_user as (insert into professional_user(username, password)values($1, $2)returning id) insert into professional_info(name, surname, birthdate, cpf, email, phone, profession, professional_document, user_id) values ($3, $4, $5, $6, $7, $8, $9, $10,(select id from new_professional_user)) returning *',
   [
     professional.username,
     professional.password,

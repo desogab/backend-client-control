@@ -4,6 +4,8 @@ import {
 import {
   deleteProfessional, getProfessional, getProfessionals, saveProfessional, updateProfessional
 } from '../services/professionalsService'
+import { IProfessionalUser } from 'src/@types/professional'
+import { hash } from 'bcryptjs'
 
 const router = Router()
 
@@ -37,10 +39,12 @@ router.get(
 router.post(
   '/api/professional',
   async (req: Request, res: Response, next: NextFunction) => {
-    const professional = req.body
+    const { ...professional }: IProfessionalUser = req.body
     try {
+      const hashPassword = await hash(professional.password, 8)
+      const newProfessional = { ...professional, password: hashPassword }
       const createNewProfessional = await saveProfessional(
-        professional
+        newProfessional
       )
       res.status(201).json(createNewProfessional)
     } catch (error) {
