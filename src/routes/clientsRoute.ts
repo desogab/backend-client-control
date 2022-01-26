@@ -1,15 +1,25 @@
+import { Prisma } from '@prisma/client'
 import {
   Router, Request, Response, NextFunction
 } from 'express'
-import { getClient, getClients, saveClient, deleteClient, updateClient } from '../services/clientsService'
+import { isAuth } from 'src/middleware/isAuth'
+import { prisma } from '../database/prismaClient'
 
 const router = Router()
 
 router.get(
-  '/api/client',
+  '/api/clients',
+  isAuth,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const clients = await getClients()
+      const clients = await prisma.client.findMany({
+        include: {
+          clientAddress: true,
+          clientEmergency: true,
+          consultationInfo: true,
+          clientSponsor: true
+        }
+      })
       res.status(200).json(clients)
     } catch (error) {
       next(error)
@@ -19,10 +29,21 @@ router.get(
 
 router.get(
   '/api/client/:id',
+  isAuth,
   async (req: Request, res: Response, next: NextFunction) => {
-    const clientId = req.params.id
+    const { id } = req.params
     try {
-      const client = await getClient(clientId)
+      const client = await prisma.client.findUnique({
+        where: {
+          id
+        },
+        include: {
+          clientAddress: true,
+          clientEmergency: true,
+          consultationInfo: true,
+          clientSponsor: true
+        }
+      })
       res.status(200).json(client)
     } catch (error) {
       next(error)
@@ -32,24 +53,100 @@ router.get(
 
 router.post(
   '/api/client',
+  isAuth,
   async (req: Request, res: Response, next: NextFunction) => {
-    const client = req.body
+    const professionalId = '1d9c0163-d7bd-44d3-99d5-8a5b389a4e5a'
+    const consultationPrice = 200
+    const {
+      name,
+      surname,
+      cpf,
+      birthdate,
+      email,
+      phone,
+      sponsor,
+      zipcode,
+      street,
+      number,
+      complement,
+      district,
+      city,
+      state,
+      emergencyName,
+      emergencyPhone,
+      emergencySurname
+    } = req.body
     try {
-      const createNewClient = await saveClient(client)
-      res.status(201).json(createNewClient)
+      const client = await prisma.client.create({
+        data: {
+          name,
+          surname,
+          cpf,
+          birthdate: new Date(birthdate),
+          email,
+          phone,
+          consultationPrice: consultationPrice,
+          sponsor,
+          professionalId: professionalId,
+          clientAddress: {
+            create: {
+              zipcode,
+              street,
+              number,
+              complement,
+              district,
+              city,
+              state
+            }
+          },
+          clientEmergency: {
+            create: {
+              name: emergencyName,
+              phone: emergencyPhone,
+              surname: emergencySurname
+            }
+          }
+        }
+      })
+      res.status(201).json({ message: 'created', id: client.id })
     } catch (error) {
-      next(error)
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2002') {
+          res.status(400).json({
+            name: error.name,
+            message: 'user already exists'
+          })
+        } if (error.code === 'P2009') {
+          res.status(400).json({
+            name: error.name,
+            message: 'invalid field'
+          })
+        }
+      } else {
+        res.status(400).json({
+          message: 'something went wrong, try again.'
+        })
+      }
     }
   }
 )
 
 router.put(
   '/api/client/:id',
+  isAuth,
   async (req: Request, res: Response, next: NextFunction) => {
-    const clientId = req.params.id
-    const client = req.body
+    const professionalId = '1d9c0163-d7bd-44d3-99d5-8a5b389a4e5a'
+    const { id } = req.params
+    const { ...data }:Prisma.ClientUpdateInput = req.body
     try {
-      await updateClient(professionalId, clientId, client)
+      await prisma.client.update({
+        where: {
+          id
+        },
+        data: {
+          ...data
+        }
+      })
       res.status(204).end()
     } catch (error) {
       next(error)
@@ -57,12 +154,76 @@ router.put(
   }
 )
 
+router.put('/api/client/:id/address',
+  isAuth,
+  async (req:Request, res: Response, next: NextFunction) => {
+    const { id } = req.params
+    const { ...data }: Prisma.ClientAddressUpdateInput = req.body
+    try {
+      await prisma.clientAddress.update({
+        where: {
+          clientId: id
+        },
+        data: {
+          ...data
+        }
+      })
+      res.status(204).end()
+    } catch (error) {
+      next(error)
+    }
+  })
+
+router.put('/api/client/:id/emergency',
+  isAuth,
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params
+    const { ...data }: Prisma.ClientEmergencyUpdateInput = req.body
+    try {
+      await prisma.clientEmergency.update({
+        where: {
+          clientId: id
+        },
+        data: {
+          ...data
+        }
+      })
+      res.status(204).end()
+    } catch (error) {
+      next(error)
+    }
+  })
+
+router.put('/api/client/:id/sponsor',
+  isAuth,
+  async (req:Request, res:Response, next:NextFunction) => {
+    const { id } = req.params
+    const { ...data }:Prisma.ClientSponsorUpdateInput = req.body
+    try {
+      await prisma.clientSponsor.update({
+        where: {
+          clientId: id
+        },
+        data: {
+          ...data
+        }
+      })
+    } catch (error) {
+      next(error)
+    }
+  })
+
 router.delete(
   '/api/client/:id',
+  isAuth,
   async (req: Request, res: Response, next: NextFunction) => {
-    const clientId = req.params.id
+    const { id } = req.params
     try {
-      await deleteClient(clientId)
+      await prisma.client.delete({
+        where: {
+          id
+        }
+      })
       res.status(204).end()
     } catch (error) {
       next(error)
