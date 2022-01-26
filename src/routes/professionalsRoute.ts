@@ -1,12 +1,48 @@
 import { Router, Request, Response, NextFunction } from 'express'
-import { hash } from 'bcryptjs'
+import { hash, compare } from 'bcryptjs'
+import { sign } from 'jsonwebtoken'
 import { prisma } from 'src/database/prismaClient'
 import { Prisma } from '@prisma/client'
+import { isAuth } from 'src/middleware/isAuth'
 
 const router = Router()
 
+router.post(
+  '/api/login',
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { username, password } = req.body
+    try {
+      const alreadyExist = await prisma.professionalUser.findFirst({
+        where: {
+          username
+        }
+      })
+
+      if (!alreadyExist) {
+        throw new Error('Invalid credentials!')
+      }
+
+      const passwordMatch = await compare(password, alreadyExist.password)
+
+      if (!passwordMatch) {
+        throw new Error('Invalid credentials!')
+      }
+
+      const token = sign({ id: alreadyExist.id }, process.env.JWT_KEY as string, {
+        algorithm: 'HS256',
+        expiresIn: '60s'
+      })
+
+      res.status(200).json({ auth: true, token })
+    } catch (error) {
+      next(error)
+    }
+  }
+)
+
 router.get(
   '/api/professional/:id',
+  isAuth,
   async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params
     try {
@@ -15,7 +51,9 @@ router.get(
           id: id
         },
         include: {
-          ProfessionalInfo: true
+          ProfessionalInfo: true,
+          client: true,
+          consultationInfo: true
         }
       })
       res.status(200).json(professional)
@@ -74,6 +112,7 @@ router.post(
 
 router.patch(
   '/api/professional/:id',
+  isAuth,
   async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params
     const { ...data } = req.body
