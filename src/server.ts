@@ -6,9 +6,9 @@ const app = express()
 
 app.use(express.json())
 
+// app.use(auth)
 app.use(professionalRoute)
 app.use(clientsRoute)
-// app.use(auth)
 
 app.use((
   error: Error,
@@ -22,10 +22,8 @@ app.use((
   if (error.message === 'Not found') {
     return res.status(404).json({ message: `${error.message}` })
   }
-  if (error.code !== undefined) {
-    if (error.detail) {
-      return res.status(400).json({ message: `${error.detail}` })
-    }
+  if (error.message === 'Bad Request') {
+    return res.status(400).json({ message: `${error.message}` })
   }
   res.status(500).json({ message: `${error.message}` })
 })
