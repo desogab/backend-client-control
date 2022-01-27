@@ -22,6 +22,16 @@ Este projeto tem como objetivo ajudar profissionais liberais como **psicólogos 
 - Cadastrar informações dos clientes ✔️
 - Autenticação de profissionais ✔️
 
+### 📁 Documentação
+
+A documentação ainda sera criada, mas caso queira rodar a API em sua máquina, adicione a sua variável de ambiente o seu banco de dados relacional e a sua chave privada JWT para conseguir rodar o projeto.
+```
+DATABASE_URL=suadatabase
+JWT_KEY=suachavejwt
+```
+
+- WIP⏳
+
 ### 🎥 Demonstração
 
 - WIP⏳
