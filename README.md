@@ -1,10 +1,16 @@
 # README
 
-![badge](https://img.shields.io/badge/license-MIT-green) 
+![badge](https://img.shields.io/badge/license-MIT-green)
+
+# 🛠️ Tecnologias utilizadas
+![badge](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
+![badge](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![badge](https://img.shields.io/badge/Express.js-404D59?style=for-the-badge)
+![badge](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
 
 # 📅 Tamarcado
 
-Modernizando sua agenda, otimizando seu tempo e potencializando recursos
+Uma API para modernizar a sua agenda, otimizando seu tempo e potencializando recursos
 
 ---
 
@@ -12,8 +18,9 @@ Este projeto tem como objetivo ajudar profissionais liberais como **psicólogos 
 
 ### 📃 Lista de Funcionalidades
 
-- Criação de profissionais liberais ❌
-- Cadastrar informações dos clientes ❌
+- Criação de profissionais ✔️
+- Cadastrar informações dos clientes ✔️
+- Autenticação de profissionais ✔️
 
 ### 🎥 Demonstração
 
