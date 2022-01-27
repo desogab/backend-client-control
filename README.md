@@ -14,7 +14,7 @@ Uma API para modernizar a sua agenda, otimizando seu tempo e potencializando rec
 
 ---
 
-Este projeto tem como objetivo ajudar profissionais liberais como **psicólogos e psicólogas, nutricionistas e dentistas** a manter a sua agenda e cadastro de pacientes de forma digital e simples. De quebra, quero proporcionar uma facilidade na hora de ter um controle financeiro de forma que facilite a vida do profissional que muitas da vezes trabalha sozinho e não tem tempo para cuidar de tudo isso dentro dos prazos necessários.
+Este projeto tem como objetivo ajudar profissionais liberais como **psicólogos e psicólogas* a manter a sua agenda e cadastro de pacientes de forma digital e simples. De quebra, quero proporcionar uma facilidade na hora de ter um controle financeiro de forma que facilite a vida do profissional que muitas da vezes trabalha sozinho e não tem tempo para cuidar de tudo isso dentro dos prazos necessários.
 
 ### 📃 Lista de Funcionalidades
 
