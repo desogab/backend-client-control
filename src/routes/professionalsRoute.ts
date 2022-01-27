@@ -30,7 +30,7 @@ router.post(
 
       const token = sign({ id: alreadyExist.id }, process.env.JWT_KEY as string, {
         algorithm: 'HS256',
-        expiresIn: '60s'
+        expiresIn: '1h'
       })
 
       res.status(200).json({ auth: true, token })
