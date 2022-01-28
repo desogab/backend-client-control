@@ -21,7 +21,7 @@ model Client {
   createdAt         DateTime          @default(now()) @map("created_at")
   updatedAt         DateTime?         @updatedAt @map("updated_at")
   professionalId    String            @map("professional_id") @db.Uuid
-  professionalUser  ProfessionalUser  @relation(fields: [professionalId], references: [id])
+  professionalUser  ProfessionalUser  @relation(fields: [professionalId], references: [id], onDelete: Cascade)
   clientAddress     ClientAddress?
   clientEmergency   ClientEmergency?
   clientSponsor     ClientSponsor?
