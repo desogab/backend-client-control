@@ -1,34 +1,5 @@
-import express, { Request, Response, NextFunction } from 'express'
-import professionalRoute from './routes/professionalsRoute'
-import clientsRoute from './routes/clientsRoute'
+import { app } from './app'
 
-const app = express()
+const PORT = process.env.PORT
 
-app.use(express.json())
-
-app.use(professionalRoute)
-app.use(clientsRoute)
-
-app.use((
-  error: Error,
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  if (error.message === 'Already exists') {
-    return res.status(409).json({ message: `${error.message}` })
-  }
-  if (error.message === 'Not found') {
-    return res.status(404).json({ message: `${error.message}` })
-  }
-  if (error.message === 'Bad Request') {
-    return res.status(400).json({ message: `${error.message}` })
-  }
-  res.status(500).json({ message: `${error.message}` })
-})
-
-const PORT = 3333
-
-app.listen(PORT, () => {
-  console.log(`listen on port ${PORT}`)
-})
+app.listen(PORT, () => console.log(`Server is running on PORT ${PORT}`))
