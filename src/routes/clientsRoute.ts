@@ -4,6 +4,14 @@ import {
 } from 'express'
 import { isAuth } from 'src/middleware/isAuth'
 import { prisma } from '../database/prismaClient'
+// eslint-disable-next-line camelcase
+import jwt_decode from 'jwt-decode'
+
+interface TokenJWT {
+  id: string;
+  iat?: string;
+  exp?: string;
+}
 
 const router = Router()
 
@@ -55,8 +63,10 @@ router.post(
   '/api/client',
   isAuth,
   async (req: Request, res: Response, next: NextFunction) => {
-    const professionalId = '1d9c0163-d7bd-44d3-99d5-8a5b389a4e5a'
-    const consultationPrice = 200
+    const token = req.headers.authorization?.split(' ')[1]
+    const decodeJWT: TokenJWT = jwt_decode(token as string)
+    const professionalId = decodeJWT.id
+
     const {
       name,
       surname,
@@ -64,6 +74,7 @@ router.post(
       birthdate,
       email,
       phone,
+      consultationPrice,
       sponsor,
       zipcode,
       street,
@@ -74,7 +85,10 @@ router.post(
       state,
       emergencyName,
       emergencyPhone,
-      emergencySurname
+      emergencySurname,
+      sponsorName,
+      sponsorSurname,
+      sponsorCpf
     } = req.body
     try {
       const client = await prisma.client.create({
@@ -85,7 +99,7 @@ router.post(
           birthdate: new Date(birthdate),
           email,
           phone,
-          consultationPrice: consultationPrice,
+          consultationPrice,
           sponsor,
           professionalId: professionalId,
           clientAddress: {
@@ -104,6 +118,13 @@ router.post(
               name: emergencyName,
               phone: emergencyPhone,
               surname: emergencySurname
+            }
+          },
+          clientSponsor: {
+            create: {
+              name: sponsorName,
+              surname: sponsorSurname,
+              cpf: sponsorCpf
             }
           }
         }
@@ -135,9 +156,10 @@ router.put(
   '/api/client/:id',
   isAuth,
   async (req: Request, res: Response, next: NextFunction) => {
-    const professionalId = '1d9c0163-d7bd-44d3-99d5-8a5b389a4e5a'
     const { id } = req.params
+
     const { ...data }:Prisma.ClientUpdateInput = req.body
+
     try {
       await prisma.client.update({
         where: {
@@ -209,6 +231,9 @@ router.put('/api/client/:id/sponsor',
         }
       })
     } catch (error) {
+      if (error instanceof Prisma.PrismaClientUnknownRequestError) {
+        console.log(error)
+      }
       next(error)
     }
   })

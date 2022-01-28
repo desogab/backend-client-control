@@ -2,8 +2,8 @@ import { Router, Request, Response, NextFunction } from 'express'
 import { hash, compare } from 'bcryptjs'
 import { sign } from 'jsonwebtoken'
 import { prisma } from 'src/database/prismaClient'
-import { Prisma } from '@prisma/client'
 import { isAuth } from 'src/middleware/isAuth'
+import { Prisma } from '@prisma/client'
 
 const router = Router()
 
@@ -66,7 +66,8 @@ router.get(
 router.post(
   '/api/professional',
   async (req: Request, res: Response, next: NextFunction) => {
-    const { username, password, name, surname, cpf, birthdate, email, phone, profession, professionalDocument } = req.body
+    const { username, password }: Prisma.ProfessionalUserCreateInput = req.body
+    const { name, surname, cpf, birthdate, email, phone, profession, professionalDocument }: Prisma.ProfessionalInfoCreateInput = req.body
     try {
       const passwordHash = await hash(password, 8)
       const user = await prisma.professionalUser.create({
@@ -93,12 +94,14 @@ router.post(
         if (error.code === 'P2002') {
           res.status(400).json({
             name: error.name,
-            message: 'user already exists'
+            message: 'user already exists',
+            target: error.meta
           })
         } if (error.code === 'P2009') {
           res.status(400).json({
             name: error.name,
-            message: 'invalid field'
+            message: 'invalid field',
+            target: error.meta
           })
         }
       } else {
@@ -110,7 +113,7 @@ router.post(
   }
 )
 
-router.patch(
+router.put(
   '/api/professional/:id',
   isAuth,
   async (req: Request, res: Response, next: NextFunction) => {
