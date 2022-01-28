@@ -15,7 +15,7 @@ app.use((
   res: Response,
   next: NextFunction
 ) => {
-  if (error.message === 'Already exists!') {
+  if (error.message === 'Already exists') {
     return res.status(409).json({ message: `${error.message}` })
   }
   if (error.message === 'Not found') {
