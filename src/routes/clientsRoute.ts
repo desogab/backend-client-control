@@ -1,13 +1,13 @@
 import { Router } from 'express'
-import { isAuth } from 'src/middleware/isAuth'
-import { getAllClients } from 'src/controllers/clientController/getAllClientController'
-import { getClient } from 'src/controllers/clientController/getClientController'
-import { createClient } from 'src/controllers/clientController/createClientController'
-import { updateClient } from 'src/controllers/clientController/updateClientController'
-import { updateAddressClient } from 'src/controllers/clientController/updateAddressClientController'
-import { updateEmergencyClient } from 'src/controllers/clientController/updateEmergencyClientController'
-import { updateSponsorClient } from 'src/controllers/clientController/updateSponsorClientController'
-import { deleteClient } from 'src/controllers/clientController/deleteClientController'
+import { isAuth } from '../middleware/isAuth'
+import { getAllClients } from '../controllers/clientController/getAllClientController'
+import { getClient } from '../controllers/clientController/getClientController'
+import { createClient } from '../controllers/clientController/createClientController'
+import { updateClient } from '../controllers/clientController/updateClientController'
+import { updateAddressClient } from '../controllers/clientController/updateAddressClientController'
+import { updateEmergencyClient } from '../controllers/clientController/updateEmergencyClientController'
+import { updateSponsorClient } from '../controllers/clientController/updateSponsorClientController'
+import { deleteClient } from '../controllers/clientController/deleteClientController'
 
 const router = Router()
 

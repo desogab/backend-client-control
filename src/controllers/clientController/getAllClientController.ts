@@ -1,5 +1,5 @@
 import {
-  Router, Request, Response, NextFunction
+  Request, Response, NextFunction
 } from 'express'
 import { prisma } from '../../database/prismaClient'
 

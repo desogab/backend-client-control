@@ -1,9 +1,9 @@
 import { Router } from 'express'
-import { isAuth } from 'src/middleware/isAuth'
-import { login } from 'src/controllers/professionalController/loginProfessionalController'
-import { getProfessional } from 'src/controllers/professionalController/getProfessionalController'
-import { createProfessional } from 'src/controllers/professionalController/createProfessionalController'
-import { updateProfessional } from 'src/controllers/professionalController/updateProfessionalController'
+import { isAuth } from '../middleware/isAuth'
+import { login } from '../controllers/professionalController/loginProfessionalController'
+import { getProfessional } from '../controllers/professionalController/getProfessionalController'
+import { createProfessional } from '../controllers/professionalController/createProfessionalController'
+import { updateProfessional } from '../controllers/professionalController/updateProfessionalController'
 
 const router = Router()
 

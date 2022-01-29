@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client'
 import { hash } from 'bcryptjs'
 import { NextFunction, Request, Response } from 'express'
-import { prisma } from 'src/database/prismaClient'
+import { prisma } from '../../database/prismaClient'
 
 export const createProfessional = async (req: Request, res: Response, next: NextFunction) => {
   const { username, password }: Prisma.ProfessionalUserCreateInput = req.body

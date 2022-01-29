@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client'
-import { prisma } from 'src/database/prismaClient'
+import { prisma } from '../../database/prismaClient'
 // eslint-disable-next-line camelcase
 import jwt_decode from 'jwt-decode'
 import { NextFunction, Request, Response } from 'express'
