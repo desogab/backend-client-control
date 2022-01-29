@@ -23,11 +23,20 @@
       "./src/@types"
     ],
     "baseUrl": ".",
+    "paths": {
+      "@App/*": [
+        "src/*"
+      ],
+      "lib/*": [
+        "common/*"
+      ]
+    }
   },
   "include": [
     "src/**/*"
   ],
   "exclude": [
+    "./node_modules",
     "./dist"
   ]
 }
