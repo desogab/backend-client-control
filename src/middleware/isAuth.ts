@@ -15,7 +15,7 @@ export function isAuth (req: Request, res:Response, next:NextFunction) {
   }
 
   try {
-    verify(token, process.env.JWT_KEY as string)
+    verify(token, process.env.JWT_SECRET as string)
     return next()
   } catch (error) {
     return res.status(401).json({

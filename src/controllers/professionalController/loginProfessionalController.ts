@@ -22,7 +22,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
       throw new Error('Invalid credentials!')
     }
 
-    const token = sign({ id: alreadyExist.id }, process.env.JWT_KEY as string, {
+    const token = sign({ id: alreadyExist.id }, process.env.JWT_SECRET as string, {
       algorithm: 'HS256',
       expiresIn: '1h'
     })
