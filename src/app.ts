@@ -1,8 +1,11 @@
 import express, { Request, Response, NextFunction } from 'express'
 import professionalRoute from './routes/professionalsRoute'
 import clientsRoute from './routes/clientsRoute'
+import cors from 'cors'
 
 const app = express()
+
+app.use(cors())
 
 app.use(express.json())
 

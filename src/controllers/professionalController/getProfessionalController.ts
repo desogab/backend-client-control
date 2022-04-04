@@ -8,11 +8,13 @@ export const getProfessional = async (req: Request, res: Response, next: NextFun
       where: {
         id: id
       },
-      include: {
+      select: {
+        id: true,
+        username: true,
         ProfessionalInfo: true,
         client: true,
         consultationInfo: true
-      }
+      },
     })
     res.status(200).json(professional)
   } catch (error) {

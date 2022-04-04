@@ -1,4 +1,4 @@
-import {app} from '../../app'
+import { app } from '../../app'
 import request from 'supertest'
 
 describe('POST - /professional - create new professional', () => {
@@ -7,7 +7,7 @@ describe('POST - /professional - create new professional', () => {
   // Deve retornar um objeto com todos os campos preenchidos do profissional
   it('Should be create a new professional', async () => {
     const response = await request(app).post('/api/professional').send({
-      
+
     })
   })
 
@@ -17,7 +17,7 @@ describe('POST - /professional - create new professional', () => {
 
   it('Should return user already exists', async () => {
     const response = await request(app).post('/api/professional').send({
-      
+
     })
   })
 
@@ -26,7 +26,7 @@ describe('POST - /professional - create new professional', () => {
   // deve retornar a mensagem 'Field is invalid'
   it('Should have invalid field', async () => {
     const response = await request(app).post('/api/professional').send({
-      
+
     })
   })
 })
