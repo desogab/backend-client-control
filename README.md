@@ -38,4 +38,4 @@ JWT_SECRET=suachavejwt
 
 ### 🧑🏻‍💻 Autor
 
-[Gabriel de Souza](https://desouzadev.vercel.app/) ![badge](https://img.shields.io/twitter/url?url=https%3A%2F%2Ftwitter.com%2Fdesogab)
+[Gabriel de Souza](https://desouzadev.vercel.app/)
